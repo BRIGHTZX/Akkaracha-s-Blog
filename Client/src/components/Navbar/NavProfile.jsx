@@ -1,4 +1,3 @@
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +7,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import axios from "axios";
-import { signoutSuccess } from "@/app/redux/user/userSlice";
+import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 function NavProfile({ id_user, imgSrc, username, email }) {
   const dispatch = useDispatch();
@@ -50,7 +49,7 @@ function NavProfile({ id_user, imgSrc, username, email }) {
           <DropdownMenuLabel>{email}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <Link href={`/Dashboard?tab=${id_user}`}>
+            <Link to={`/Dashboard?tab=${id_user}`}>
               <DropdownMenuItem>Profile</DropdownMenuItem>
             </Link>
             <DropdownMenuItem>Settings</DropdownMenuItem>
