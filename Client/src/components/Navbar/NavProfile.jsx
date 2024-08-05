@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function NavProfile({ id_user, imgSrc, username, email }) {
+function NavProfile({ imgSrc, username, email }) {
   const dispatch = useDispatch();
 
   const handleSignout = async () => {
@@ -48,7 +48,7 @@ function NavProfile({ id_user, imgSrc, username, email }) {
         <DropdownMenuLabel>{email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link to={`/Dashboard?tab=${id_user}`}>
+          <Link to={`/Dashboard?tab=profile`}>
             <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
           <DropdownMenuItem>Settings</DropdownMenuItem>
@@ -60,7 +60,6 @@ function NavProfile({ id_user, imgSrc, username, email }) {
   );
 }
 NavProfile.propTypes = {
-  id_user: PropTypes.string.isRequired,
   imgSrc: PropTypes.string,
   username: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,

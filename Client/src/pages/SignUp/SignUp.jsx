@@ -123,6 +123,7 @@ function SignUp() {
                                 <Input
                                   id="username"
                                   placeholder="Enter your Username"
+                                  className="border border-gray-300 rounded-md p-2"
                                   {...field}
                                   onChange={(e) => {
                                     field.onChange(e); // This calls React Hook Form's internal onChange
@@ -144,6 +145,7 @@ function SignUp() {
                                 <Input
                                   id="email"
                                   placeholder="Enter your Email"
+                                  className="border border-gray-300 rounded-md p-2"
                                   {...field}
                                   onChange={(e) => {
                                     field.onChange(e); // This calls React Hook Form's internal onChange
@@ -165,6 +167,7 @@ function SignUp() {
                                 <Input
                                   id="password"
                                   placeholder="Enter your Password"
+                                  className="border border-gray-300 rounded-md p-2"
                                   {...field}
                                   onChange={(e) => {
                                     field.onChange(e); // This calls React Hook Form's internal onChange

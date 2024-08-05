@@ -15,7 +15,6 @@ function MainNav() {
         {currentUser ? (
           <div className="hidden md:block">
             <NavProfile
-              id_user={currentUser._id}
               imgSrc={currentUser.profilePicture}
               username={currentUser.username}
               email={currentUser.email}
