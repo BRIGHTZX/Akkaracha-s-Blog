@@ -25,6 +25,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BiLoader } from "react-icons/bi";
+import Oauth from "@/components/Oauth";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -162,22 +163,27 @@ function SignIn() {
                             </FormItem>
                           )}
                         />
-                        <Button
-                          type="submit"
-                          className="w-full bg-blue-600 text-white"
-                          disabled={loading}
-                        >
-                          {loading ? (
-                            <>
-                              <BiLoader />
-                              <span className="pl-3">Loadding...</span>
-                            </>
-                          ) : (
-                            "Sign In"
-                          )}
-                        </Button>
+                        <div>
+                          <Button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white mt-4"
+                            disabled={loading}
+                          >
+                            {loading ? (
+                              <>
+                                <BiLoader />
+                                <span className="pl-3">Loadding...</span>
+                              </>
+                            ) : (
+                              "Sign In"
+                            )}
+                          </Button>
+                        </div>
                       </form>
                     </Form>
+                  </div>
+                  <div>
+                    <Oauth />
                   </div>
                 </div>
               </div>

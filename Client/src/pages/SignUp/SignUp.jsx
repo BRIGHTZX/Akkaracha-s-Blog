@@ -17,6 +17,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BiLoader } from "react-icons/bi";
+import Oauth from "@/components/Oauth";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -189,6 +190,8 @@ function SignUp() {
                             "Sign Up"
                           )}
                         </Button>
+
+                        <Oauth />
                       </form>
                     </Form>
                   </div>

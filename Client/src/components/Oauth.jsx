@@ -1,11 +1,14 @@
 import { Button } from "./ui/button";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { app } from "../firebase";
+import { app } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { signInSuccess, signInFailure } from "@/app/redux/user/userSlice";
+import { signInSuccess, signInFailure } from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Oauth() {
+  const navigate = useNavigate(); // Correctly invoke useNavigate
   const dispatch = useDispatch();
 
   const handleGoogleClick = async () => {
@@ -15,32 +18,38 @@ function Oauth() {
 
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
-      //ใช่้จัดการการตอบกลับของฝั่ง server
-      const res = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      // Send the Google sign-in result to your server
+      const res = await axios.post(
+        "/api/auth/google",
+        {
           name: resultsFromGoogle.user.displayName,
           email: resultsFromGoogle.user.email,
           googlePhoto: resultsFromGoogle.user.photoURL,
-        }),
-      });
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-      const data = await res.json();
-      if (res.ok) {
+      // Directly use the response data
+      const data = res.data;
+
+      // Handle the server response
+      if (res.status >= 200 && res.status < 300) {
         dispatch(signInSuccess(data));
-        router.push("../Home");
+        navigate("/"); // Redirect the user after a successful login
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
+      console.error("Google sign-in failed:", error);
     }
   };
 
   return (
     <Button
       variant="outline"
-      className="w-full border border-black bg-white text-black"
-      onClick={handleGoogleClick} // Connect the handler to the button
+      className="w-full border border-secondary bg-primary text-secondary mt-4"
+      onClick={handleGoogleClick}
     >
       <span className="text-2xl">
         <AiFillGoogleCircle />
