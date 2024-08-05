@@ -9,10 +9,6 @@ import { Toggle } from "@/components/ui/toggle";
 
 function Header() {
   const { theme, setTheme } = useTheme();
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
-
   return (
     <nav className="sticky border-b">
       <MaxWidthWrapper>
