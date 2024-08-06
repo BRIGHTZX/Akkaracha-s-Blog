@@ -46,6 +46,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutSuccess,
 } from "../redux/user/userSlice";
 import axios from "axios";
 
@@ -195,6 +196,20 @@ function DashProfile() {
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+  const handleSignout = async () => {
+    try {
+      const res = await axios.post(`/api/user/signout`);
+
+      const data = res.data;
+      if (!(res.status >= 200 && res.status < 300)) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
   return (
@@ -362,7 +377,11 @@ function DashProfile() {
               </AlertDialog>
             </div>
             <div>
-              <Button variant="destructive" className="w-40">
+              <Button
+                variant="destructive"
+                className="w-40"
+                onClick={handleSignout}
+              >
                 Sign out
               </Button>
             </div>

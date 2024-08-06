@@ -26,12 +26,19 @@ app.listen(4000, () => {
   console.log("Server run 4000");
 });
 
-//API
+// API
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 
-//Control status and error
+// Middleware for setting headers
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
+
+// Control status and error
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
   const message = error.message || "Internal Server Error";
@@ -41,5 +48,3 @@ app.use((error, req, res, next) => {
     message,
   });
 });
-
-// mongodb+srv://akkaracha:akkarachas65@blog-01.pdo6qgj.mongodb.net/?retryWrites=true&w=majority&appName=blog-01
