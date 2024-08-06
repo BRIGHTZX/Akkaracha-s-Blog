@@ -9,6 +9,8 @@ import Footer from "./components/Footer";
 import About from "./pages/About/About";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PrivateRoute from "./components/PrivateRoute";
+import OnlyPrivateRoute from "./components/OnlyAdminPrivateRoute";
+import CreatePost from "./pages/CreatePost/CreatePost";
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -19,6 +21,9 @@ function App() {
           <Route path="/About" element={<About />} />
           <Route element={<PrivateRoute />}>
             <Route path="/Dashboard" element={<Dashboard />} />
+          </Route>
+          <Route element={<OnlyPrivateRoute />}>
+            <Route path="/Create-Post" element={<CreatePost />} />
           </Route>
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />

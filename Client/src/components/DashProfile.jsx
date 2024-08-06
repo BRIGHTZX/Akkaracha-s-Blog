@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
@@ -49,6 +50,7 @@ import {
   signoutSuccess,
 } from "../redux/user/userSlice";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function DashProfile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -123,6 +125,7 @@ function DashProfile() {
 
         setImageFileUploadProgress(progress.toFixed(0));
       },
+      // eslint-disable-next-line no-unused-vars
       (error) => {
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
@@ -213,7 +216,7 @@ function DashProfile() {
     }
   };
   return (
-    <div className="w-full md:container p-4">
+    <div className="w-full md:container my-4">
       <div className="rounded-lg shadow-lg bg-secondary text-primary py-10 md:py-12 px-6 ">
         <Form {...form}>
           <form className="space-y-2 flex flex-col" onSubmit={handleSubmit}>
@@ -336,7 +339,7 @@ function DashProfile() {
             <div>
               <Button
                 type="submit"
-                className="w-full bg-blue-600 text-white mt-4"
+                className="w-full mt-4"
                 disabled={loading || imageFileUploading}
               >
                 {loading ? (
@@ -349,6 +352,13 @@ function DashProfile() {
               </Button>
             </div>
           </form>
+          {currentUser.isAdmin && (
+            <Link to="/Create-Post">
+              <Button className="w-full bg-purple-600 text-white mt-4">
+                Create a Post
+              </Button>
+            </Link>
+          )}
           <div className="flex justify-between mt-4">
             <div>
               <AlertDialog>
