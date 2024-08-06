@@ -1,5 +1,4 @@
 import { useState } from "react";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { Input } from "@/components/ui/input";
 import {
   Select,
