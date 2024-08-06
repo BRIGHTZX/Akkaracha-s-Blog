@@ -352,10 +352,8 @@ function DashProfile() {
           <div className="flex justify-between mt-4">
             <div>
               <AlertDialog>
-                <AlertDialogTrigger>
-                  <Button variant="destructive" className="w-40">
-                    Delete Account
-                  </Button>
+                <AlertDialogTrigger className="text-red-500 hover:text-red-700">
+                  Delete Account
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
