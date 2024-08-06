@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
+// import axios from "axios";
 //firebase
 import {
   getStorage,
@@ -21,6 +21,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "./ui/alert";
@@ -32,14 +43,14 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
+import axios from "axios";
 
 function DashProfile() {
-  const {
-    currentUser,
-    loading,
-    error: errorMessage,
-  } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const formSchema = z.object({
     username: z.string().min(6, {
       message: "Password must be at least 6 characters.",
@@ -60,25 +71,19 @@ function DashProfile() {
       password: "",
     },
   });
+
   const dispatch = useDispatch();
+
   //State
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
-  const filePickerRef = useRef(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
-  const [updateUserSuccess, setUpdateUserSuccess] = useState("");
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
   const [formData, setFormData] = useState({});
-  console.log("Current user:", currentUser);
-  //Functional
-  //Controller Form
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
-  };
-
-  // Image
+  const filePickerRef = useRef();
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -86,6 +91,11 @@ function DashProfile() {
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
 
   const uploadImage = async () => {
     // service firebase.storage {
@@ -93,8 +103,8 @@ function DashProfile() {
     //     match /{allPaths=**} {
     //       allow read;
     //       allow write: if
-    //       request.resourece.size < 2 * 1024 * 1024 &&
-    //       request.resource.contentType.matches("image/.*")
+    //       request.resource.size < 2 * 1024 * 1024 &&
+    //       request.resource.contentType.matches('image/.*')
     //     }
     //   }
     // }
@@ -104,15 +114,14 @@ function DashProfile() {
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
         setImageFileUploadProgress(progress.toFixed(0));
       },
-
       (error) => {
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
@@ -120,9 +129,8 @@ function DashProfile() {
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
-        setImageFileUploading(false); // ทำการตั้งค่านี้เพื่อให้ loading กลับไปที่ false
+        setImageFileUploading(false);
       },
-
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
@@ -133,23 +141,24 @@ function DashProfile() {
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdateUserError(null);
     setUpdateUserSuccess(null);
-
     if (Object.keys(formData).length === 0) {
-      setUpdateUserError("No change made");
+      setUpdateUserError("No changes made");
       return;
     }
-
     if (imageFileUploading) {
       setUpdateUserError("Please wait for image to upload");
+      return;
     }
-
     try {
       dispatch(updateStart());
-
       const res = await axios.put(
         `/api/user/update/${currentUser._id}`,
         formData,
@@ -157,30 +166,37 @@ function DashProfile() {
           headers: { "Content-Type": "application/json" },
         }
       );
-      const data = res.data;
-
-      if (res.status >= 200 && res.status < 300) {
-        setUpdateUserSuccess("User's Profile updated successfully");
-        dispatch(updateSuccess(data));
-      } else {
+      const data = await res.data;
+      if (!(res.status >= 200 && res.status < 300)) {
         dispatch(updateFailure(data.message));
         setUpdateUserError(data.message);
+      } else {
+        dispatch(updateSuccess(data));
+        setUpdateUserSuccess("User's profile updated successfully");
+        setFormData({});
       }
     } catch (error) {
-      dispatch(
-        updateFailure(
-          error.response ? error.response.data.message : error.message
-        )
-      );
+      dispatch(updateFailure(error.message));
+      setUpdateUserError(error.message);
     }
   };
 
-  useEffect(() => {
-    if (imageFile) {
-      uploadImage();
-    }
-  }, [imageFile]);
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`);
 
+      const data = res.data;
+
+      if (!(res.status >= 200 && res.status < 300)) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
   return (
     <div className="w-full md:container p-4">
       <div className="rounded-lg shadow-lg bg-secondary text-primary py-10 md:py-12 px-6 ">
@@ -306,7 +322,7 @@ function DashProfile() {
               <Button
                 type="submit"
                 className="w-full bg-blue-600 text-white mt-4"
-                disabled={loading}
+                disabled={loading || imageFileUploading}
               >
                 {loading ? (
                   <>
@@ -317,11 +333,40 @@ function DashProfile() {
                 )}
               </Button>
             </div>
-            <div className="flex justify-between">
-              <Button>Delete Account</Button>
-              <Button>Sign Out</Button>
-            </div>
           </form>
+          <div className="flex justify-between mt-4">
+            <div>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <Button variant="destructive" className="w-40">
+                    Delete Account
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Account ?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete your account ?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-500 hover:bg-red-700"
+                      onClick={handleDeleteUser}
+                    >
+                      Yes, I&apos;m sure
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+            <div>
+              <Button variant="destructive" className="w-40">
+                Sign out
+              </Button>
+            </div>
+          </div>
         </Form>
       </div>
       <div>
@@ -332,10 +377,10 @@ function DashProfile() {
             </Alert>
           </div>
         )}
-        {errorMessage && (
+        {error && (
           <div className="mt-4">
             <Alert variant="destructive">
-              <AlertDescription>{errorMessage}</AlertDescription>
+              <AlertDescription>{error}</AlertDescription>
             </Alert>
           </div>
         )}
