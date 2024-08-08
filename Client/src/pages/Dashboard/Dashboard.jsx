@@ -13,7 +13,6 @@ function Dashboard() {
     if (tabFromUrl) {
       setTab(tabFromUrl);
     }
-    console.log(tabFromUrl);
   }, [location.search]);
 
   return (

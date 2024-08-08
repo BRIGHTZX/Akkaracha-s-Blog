@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -25,13 +27,15 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 function CreatePost() {
-  const [value, setValue] = useState("");
-
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadPrograss] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-
   const [formData, setFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
+  const [publishSuccess, setPublishSuccess] = useState(null);
+
+  const navigate = useNavigate();
+
   const handleUploadImage = async () => {
     try {
       if (!file) {
@@ -71,11 +75,34 @@ function CreatePost() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPublishSuccess(null);
+    setPublishError(null);
+    try {
+      const res = await axios.post("/api/post/create", formData);
+      const data = await res.data;
+
+      if (!(res.status >= 200 && res.status < 300)) {
+        setPublishError(data.message || "Failed to publish");
+      } else {
+        setPublishError(null);
+        setPublishSuccess("Success Publish");
+        setFormData({});
+        setTimeout(() => {
+          navigate(`/Post/${res.data.slug}`);
+        }, 1500); // 2 seconds delay
+      }
+    } catch (error) {
+      setPublishError("Publish Falied");
+    }
+  };
+
   return (
     <div className="h-auto md:container">
       <div className="text-center h-auto p-4 sm:my-4">
         <h1 className="text-5xl font-bold my-7">Crate a Post</h1>
-        <form action="">
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
             {/* section 1 */}
             <div className="flex flex-col gap-4 sm:flex-row justify-between">
@@ -85,8 +112,15 @@ function CreatePost() {
                 required
                 id="title"
                 className="flex-1"
+                onChange={(e) => {
+                  setFormData({ ...formData, title: e.target.value });
+                }}
               />
-              <Select>
+              <Select
+                onValueChange={(value) => {
+                  setFormData({ ...formData, category: value });
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[250px] md:w-[350px] font-bold">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -129,7 +163,7 @@ function CreatePost() {
               </Button>
             </div>
             {imageUploadError && (
-              <Alert variant="destructive">
+              <Alert className="bg-red-500 text-white">
                 <AlertDescription>{imageUploadError}</AlertDescription>
               </Alert>
             )}
@@ -144,11 +178,12 @@ function CreatePost() {
 
             <ReactQuill
               theme="snow"
-              onChange={setValue}
-              value={value}
               placeholder="Write something..."
-              className="h-[500px] mb-12"
+              className="h-[450px] mb-12"
               required
+              onChange={(content) => {
+                setFormData({ ...formData, content: content });
+              }}
             />
 
             <Button
@@ -158,6 +193,16 @@ function CreatePost() {
               Publish
             </Button>
           </div>
+          {publishError && (
+            <Alert className="mt-4 bg-red-400 text-white">
+              <AlertDescription>{publishError}</AlertDescription>
+            </Alert>
+          )}
+          {publishSuccess && (
+            <Alert className="mt-4 bg-green-400 text-white">
+              <AlertDescription>{publishSuccess}</AlertDescription>
+            </Alert>
+          )}
         </form>
       </div>
     </div>
