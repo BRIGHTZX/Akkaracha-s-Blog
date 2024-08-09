@@ -171,6 +171,7 @@ export function SidebarItem({
 SidebarItem.propTypes = {
   icon: PropTypes.node.isRequired, // ใช้ PropTypes.node เพราะ icon อาจเป็น JSX
   text: PropTypes.node.isRequired, // ใช้ PropTypes.node เพราะ text อาจเป็น JSX
+  currentUser: PropTypes.bool,
   active: PropTypes.bool, // ใช้ PropTypes.bool แทน PropTypes.string
   alert: PropTypes.bool, // ใช้ PropTypes.bool แทน PropTypes.string
 };
