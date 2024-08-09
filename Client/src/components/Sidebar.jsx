@@ -1,22 +1,35 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 // icon
 import { BiArrowFromRight, BiArrowFromLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RiLogoutBoxFill } from "react-icons/ri";
-import axios from "axios";
+import { BsFilePost } from "react-icons/bs";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 
 const SidebarContext = createContext();
 
 export default function Sidebar() {
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   const [expanded, setExpanded] = useState(false);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [tab, setTab] = useState("");
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tabFromUrl = urlParams.get("tab");
+    if (tabFromUrl) {
+      setTab(tabFromUrl);
+    }
+  }, [location.search]);
 
   const handleSignout = async () => {
     try {
@@ -56,11 +69,30 @@ export default function Sidebar() {
 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <Link href="/Dashboard?tab=profile">
-              <SidebarItem icon={<CgProfile />} text="Profile" active alert />
+            <Link to="/Dashboard?tab=profile">
+              <SidebarItem
+                icon={<CgProfile />}
+                text="Profile"
+                currentUser={currentUser.isAdmin}
+                active={tab == "profile"}
+                alert
+              />
             </Link>
-            <Link href="#">
-              <SidebarItem icon={<IoSettingsOutline />} text="Setting" />
+            {currentUser.isAdmin === true && (
+              <Link to="/Dashboard?tab=posts">
+                <SidebarItem
+                  icon={<BsFilePost />}
+                  text="Posts"
+                  active={tab == "posts"}
+                />
+              </Link>
+            )}
+            <Link to="/Dashboard?tab=setting">
+              <SidebarItem
+                icon={<IoSettingsOutline />}
+                text="Setting"
+                active={tab == "setting"}
+              />
             </Link>
             <hr />
             <SidebarItem
@@ -75,7 +107,14 @@ export default function Sidebar() {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert, ...props }) {
+export function SidebarItem({
+  icon,
+  text,
+  currentUser,
+  active,
+  alert,
+  ...props
+}) {
   const { expanded } = useContext(SidebarContext);
 
   return (
@@ -91,11 +130,20 @@ export function SidebarItem({ icon, text, active, alert, ...props }) {
     >
       {icon}
       <span
-        className={`overflow-hidden transition-all ${
+        className={`flex overflow-hidden transition-all ${
           expanded ? "ml-3" : "w-0"
         }`}
       >
-        {text}
+        {text === "Profile" ? (
+          <>
+            {text}
+            <span className="flex items-center text-sm font-bold bg-gray-400 px-2 ml-5 rounded-sm">
+              {currentUser === true ? "Admin" : "User"}
+            </span>
+          </>
+        ) : (
+          text
+        )}
       </span>
       {alert && (
         <div
