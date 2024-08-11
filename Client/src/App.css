@@ -74,3 +74,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "Kanit";
+  src: url("/fonts/Kanit-Regular.ttf") format("truetype");
+}
+
+.kanit {
+  font-family: "Kanit", sans-serif;
+}
+
+/* Oswald Font */
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/Oswald-Bold.ttf") format("truetype");
+}
+
+.oswald {
+  font-family: "Oswald", sans-serif;
+}

@@ -15,20 +15,22 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/About" element={<About />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/Dashboard" element={<Dashboard />} />
-          </Route>
-          <Route element={<OnlyPrivateRoute />}>
-            <Route path="/Create-Post" element={<CreatePost />} />
-          </Route>
-          <Route path="/SignIn" element={<SignIn />} />
-          <Route path="/SignUp" element={<SignUp />} />
-        </Routes>
-        <Footer />
+        <div className="kanit">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/About" element={<About />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/Dashboard" element={<Dashboard />} />
+            </Route>
+            <Route element={<OnlyPrivateRoute />}>
+              <Route path="/Create-Post" element={<CreatePost />} />
+            </Route>
+            <Route path="/SignIn" element={<SignIn />} />
+            <Route path="/SignUp" element={<SignUp />} />
+          </Routes>
+          <Footer />
+        </div>
       </BrowserRouter>
     </ThemeProvider>
   );
