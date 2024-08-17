@@ -7,7 +7,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -45,9 +44,11 @@ function DashPosts() {
   return (
     <div>
       {currentUser.isAdmin && userPosts.length > 0 ? (
-        <div>
-          <ScrollArea className="whitespace-nowrap rounded-md border">
-            <Table className="">
+        <div className="lg:mx-12">
+          <ScrollArea className="max-w-full overflow-x-auto rounded-md border">
+            <Table className="min-w-[800px]">
+              {" "}
+              {/* กำหนดความกว้างขั้นต่ำของตาราง */}
               <TableHeader className="bg-secondary">
                 <TableRow>
                   {/* Header */}
@@ -62,7 +63,7 @@ function DashPosts() {
                 </TableRow>
               </TableHeader>
               {userPosts.map((post) => (
-                <TableBody key={userPosts._id}>
+                <TableBody key={post._id} className="border border-secondary">
                   <TableRow>
                     <TableCell className="font-medium">
                       {new Date(post.updatedAt).toLocaleDateString()}
