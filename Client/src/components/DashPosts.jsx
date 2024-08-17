@@ -47,8 +47,6 @@ function DashPosts() {
         <div className="lg:mx-12">
           <ScrollArea className="max-w-full overflow-x-auto rounded-md border">
             <Table className="min-w-[800px]">
-              {" "}
-              {/* กำหนดความกว้างขั้นต่ำของตาราง */}
               <TableHeader className="bg-secondary">
                 <TableRow>
                   {/* Header */}
@@ -82,11 +80,11 @@ function DashPosts() {
                     </TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell>
-                      <span>Delete</span>
+                      <span className="text-red-500">Delete</span>
                     </TableCell>
                     <TableCell>
                       <Link to={`/update-post/${post._id}`}>
-                        <span>Edit</span>
+                        <span className="text-green-500">Edit</span>
                       </Link>
                     </TableCell>
                   </TableRow>
