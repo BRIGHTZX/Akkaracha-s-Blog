@@ -122,7 +122,7 @@ export function SidebarItem({
       {...props}
       className={`group
             relative flex items-center py-2 px-3 my-1
-            rounded-md cursor-pointer
+            rounded-md cursor-pointer z-50
 
             ${active ? "bg-gray-500/20 text-primary" : ""}
             hover:bg-gray-500/50
