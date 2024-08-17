@@ -74,7 +74,19 @@ function DashUsers() {
     }
   };
 
-  const handleDeleteUser = async () => {};
+  const handleDeleteUser = async () => {
+    try {
+      const res = await axios.delete(`/api/user/delete/${userIdToDelete}`);
+      const data = res.data;
+      if (res.status >= 200 && res.status < 300) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div>
       {currentUser.isAdmin && users.length > 0 ? (
