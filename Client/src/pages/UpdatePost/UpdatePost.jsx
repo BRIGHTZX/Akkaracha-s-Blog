@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -11,6 +11,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../../firebase";
+import { useSelector } from "react-redux";
 // component
 import { Input } from "@/components/ui/input";
 import {
@@ -27,15 +28,43 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-function CreatePost() {
+function UpdatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadPrograss] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const [publishSuccess, setPublishSuccess] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
+  const { postId } = useParams();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const res = await axios(`/api/post/getposts?postId=${postId}`);
+        const data = res.data;
+
+        if (res.status >= 200 && res.status < 300) {
+          if (data && data.posts && data.posts.length > 0) {
+            setPublishError(null);
+            setFormData(data.posts[0]);
+          } else {
+            setPublishError("Post not found");
+          }
+        } else {
+          setPublishError(data.message || "Failed to fetch post");
+        }
+      } catch (error) {
+        // Handle network errors or other issues
+        console.error("Error fetching the post:", error);
+        setPublishError("Error fetching the post");
+      }
+    };
+
+    fetchPost();
+  }, [postId]);
 
   const handleUploadImage = async () => {
     try {
@@ -81,28 +110,31 @@ function CreatePost() {
     setPublishSuccess(null);
     setPublishError(null);
     try {
-      const res = await axios.post("/api/post/create", formData);
+      const res = await axios.put(
+        `/api/post/updatepost/${formData._id}/${currentUser._id}`,
+        formData
+      );
       const data = await res.data;
 
       if (!(res.status >= 200 && res.status < 300)) {
-        setPublishError(data.message || "Failed to publish");
+        setPublishError(data.message || "Failed to Update");
       } else {
         setPublishError(null);
-        setPublishSuccess("Success Publish");
+        setPublishSuccess("Success Update");
         setFormData({});
         setTimeout(() => {
-          navigate(`/Post/${res.data.slug}`);
+          navigate(`/Post/${data.slug}`);
         }, 1500); // 2 seconds delay
       }
     } catch (error) {
-      setPublishError("Publish Falied");
+      setPublishError("Update Falied");
     }
   };
 
   return (
     <div className="h-auto md:container">
       <div className="text-center h-auto p-4 sm:my-4">
-        <h1 className="text-5xl font-bold my-7">Create a Post</h1>
+        <h1 className="text-5xl font-bold my-7">Update Post</h1>
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
             {/* section 1 */}
@@ -113,11 +145,13 @@ function CreatePost() {
                 required
                 id="title"
                 className="flex-1"
+                value={formData.title}
                 onChange={(e) => {
                   setFormData({ ...formData, title: e.target.value });
                 }}
               />
               <Select
+                value={formData.category}
                 onValueChange={(value) => {
                   setFormData({ ...formData, category: value });
                 }}
@@ -179,6 +213,7 @@ function CreatePost() {
 
             <ReactQuill
               theme="snow"
+              value={formData.content}
               placeholder="Write something..."
               className="h-[450px] mb-12"
               required
@@ -189,9 +224,9 @@ function CreatePost() {
 
             <Button
               type="submit"
-              className="font-bold text-2xl h-auto mt-2 hover:bg-gray-400"
+              className="font-bold text-2xl h-auto mt-2 hover:bg-gray-300"
             >
-              Publish
+              Update Post
             </Button>
           </div>
           {publishError && (
@@ -210,4 +245,4 @@ function CreatePost() {
   );
 }
 
-export default CreatePost;
+export default UpdatePost;

@@ -11,6 +11,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import PrivateRoute from "./components/PrivateRoute";
 import OnlyPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost/CreatePost";
+import UpdatePost from "./pages/UpdatePost/UpdatePost";
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -18,6 +19,8 @@ function App() {
         <div className="kanit">
           <Header />
           <Routes>
+            <Route path="/SignIn" element={<SignIn />} />
+            <Route path="/SignUp" element={<SignUp />} />
             <Route path="/" element={<Home />} />
             <Route path="/About" element={<About />} />
             <Route element={<PrivateRoute />}>
@@ -25,9 +28,8 @@ function App() {
             </Route>
             <Route element={<OnlyPrivateRoute />}>
               <Route path="/Create-Post" element={<CreatePost />} />
+              <Route path="/Update-Post/:postId" element={<UpdatePost />} />
             </Route>
-            <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/SignUp" element={<SignUp />} />
           </Routes>
           <Footer />
         </div>
