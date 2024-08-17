@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -12,13 +13,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
+  const [postIdToDelete, setPostIdToDelete] = useState("");
   console.log(userPosts);
 
   useEffect(() => {
@@ -61,9 +73,30 @@ function DashPosts() {
           setShowMore(false);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const handleDeletePost = async () => {
+    try {
+      const res = await axios.delete(
+        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`
+      );
+      console.log(res);
+      const data = res.data;
+
+      if (!(res.status >= 200 && res.status < 300)) {
+        console.log(data.message);
+      } else {
+        setUserPosts((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      }
+    } catch (error) {
+      console.error("Failed to delete the post:", error);
+    }
+  };
   return (
     <div>
       {currentUser.isAdmin && userPosts.length > 0 ? (
@@ -103,7 +136,38 @@ function DashPosts() {
                     </TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell>
-                      <span className="text-red-500">Delete</span>
+                      <span className="text-red-500">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              onClick={() => setPostIdToDelete(post._id)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              Delete
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you sure you want to delete this post ?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                If you want delete this post. Click Yes I&apos;m
+                                sure
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={handleDeletePost}
+                                className="bg-red-500 text-white"
+                              >
+                                Yes, I&apos;m sure
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Link to={`/update-post/${post._id}`}>
@@ -121,14 +185,14 @@ function DashPosts() {
               onClick={handleShowMore}
               variant="ghost"
               className="w-full self-center py-7 text-sm"
-              w-full
-              text-primary
             >
               Show more
             </Button>
           )}
         </div>
-      ) : null}
+      ) : (
+        <div>You have no posts yet!</div>
+      )}
     </div>
   );
 }
