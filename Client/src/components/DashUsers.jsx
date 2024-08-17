@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -25,26 +24,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { FaCheck } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
-  const [userPosts, setUserPosts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [showMore, setShowMore] = useState(true);
-  const [postIdToDelete, setPostIdToDelete] = useState("");
-  console.log(userPosts);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUsers = async () => {
       try {
-        const res = await axios.get(
-          `/api/post/getposts?userId=${currentUser._id}`
-        );
+        const res = await axios.get(`/api/user/getusers`);
 
         const data = res.data;
 
         if (res.status >= 200 && res.status < 300) {
-          setUserPosts(data.posts);
-          if (data.posts.length < 9) {
+          setUsers(data.users);
+          if (data.users.length < 9) {
             setShowMore(false);
           }
         }
@@ -54,22 +52,20 @@ function DashUsers() {
     };
 
     if (currentUser.isAdmin) {
-      fetchPosts();
+      fetchUsers();
     }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
-    const startIndex = userPosts.length;
+    const startIndex = users.length;
 
     try {
-      const res = await axios(
-        `api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
-      );
+      const res = await axios(`api/user/getusers?startIndex=${startIndex}`);
 
       const data = res.data;
       if (res.status >= 200 && res.status < 300) {
-        setUserPosts((prev) => [...prev, ...data.posts]);
-        if (data.posts.length < 9) {
+        setUsers((prev) => [...prev, ...data.users]);
+        if (data.users.length < 9) {
           setShowMore(false);
         }
       }
@@ -78,69 +74,52 @@ function DashUsers() {
     }
   };
 
-  const handleDeletePost = async () => {
-    try {
-      const res = await axios.delete(
-        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`
-      );
-      console.log(res);
-      const data = res.data;
-
-      if (!(res.status >= 200 && res.status < 300)) {
-        console.log(data.message);
-      } else {
-        setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
-        );
-      }
-    } catch (error) {
-      console.error("Failed to delete the post:", error);
-    }
-  };
+  const handleDeleteUser = async () => {};
   return (
     <div>
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {currentUser.isAdmin && users.length > 0 ? (
         <div className="lg:mx-12">
           <ScrollArea className="max-w-full overflow-x-auto rounded-md border">
             <Table className="min-w-[800px]">
-              <TableHeader className="bg-secondary">
+              <TableHeader className="bg-secondary uppercase">
                 <TableRow>
                   {/* Header */}
-                  <TableHead className="w-[150px]">Date updated</TableHead>
-                  <TableHead className="w-[150px]">Post image</TableHead>
-                  <TableHead className="w-[150px]">Post title</TableHead>
-                  <TableHead className="w-[150px]">Category</TableHead>
+                  <TableHead className="w-[150px]">Date Created</TableHead>
+                  <TableHead className="w-[150px]">User image</TableHead>
+                  <TableHead className="w-[150px]">Username</TableHead>
+                  <TableHead className="w-[150px]">Email</TableHead>
+                  <TableHead className="w-[150px]">Admin</TableHead>
                   <TableHead className="w-[100px]">Delete</TableHead>
-                  <TableHead className="w-[100px]">
-                    <span>Edit</span>
-                  </TableHead>
                 </TableRow>
               </TableHeader>
-              {userPosts.map((post) => (
-                <TableBody key={post._id} className="border border-secondary">
+              {users.map((user) => (
+                <TableBody key={user._id} className="border border-secondary">
                   <TableRow>
                     <TableCell className="font-medium">
-                      {new Date(post.updatedAt).toLocaleDateString()}
+                      {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
-                      <Link to={`/post/${post.slug}`}>
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-20 h-10 object-cover bg-gray-500"
-                        />
-                      </Link>
+                      <img
+                        src={user.profilePicture}
+                        alt={user.username}
+                        className="w-10 h-10 rounded-full  object-cover bg-gray-500"
+                      />
                     </TableCell>
-                    <TableCell className="font-bold">
-                      <Link to={`/post/${post.slug}`}>{post.title}</Link>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      {user.isAdmin ? (
+                        <FaCheck className="text-green-600" />
+                      ) : (
+                        <IoClose className="text-xl text-red-600" />
+                      )}
                     </TableCell>
-                    <TableCell>{post.category}</TableCell>
                     <TableCell>
                       <span className="text-red-500">
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button
-                              onClick={() => setPostIdToDelete(post._id)}
+                              onClick={() => setUserIdToDelete(user._id)}
                               className="text-red-500 hover:text-red-700"
                             >
                               Delete
@@ -149,17 +128,17 @@ function DashUsers() {
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Are you sure you want to delete this post ?
+                                Are you sure you want to delete this user ?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                If you want delete this post. Click Yes I&apos;m
+                                If you want delete this user. Click Yes I&apos;m
                                 sure
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={handleDeletePost}
+                                onClick={handleDeleteUser}
                                 className="bg-red-500 text-white"
                               >
                                 Yes, I&apos;m sure
@@ -168,11 +147,6 @@ function DashUsers() {
                           </AlertDialogContent>
                         </AlertDialog>
                       </span>
-                    </TableCell>
-                    <TableCell>
-                      <Link to={`/Update-Post/${post._id}`}>
-                        <span className="text-green-500">Edit</span>
-                      </Link>
                     </TableCell>
                   </TableRow>
                 </TableBody>

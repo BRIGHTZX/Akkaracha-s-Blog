@@ -23,15 +23,15 @@ function Dashboard() {
         {/* Sidebar */}
         <Sidebar />
       </div>
-      {/* Profile ---------------------------*/}
+      {/* Profile */}
       {tab === "profile" && <DashProfile />}
-      {/* Posts -----------------------------*/}
+      {/* Posts */}
       {tab === "posts" && (
         <div className="w-full">
           <DashPosts />
         </div>
       )}
-      {/* Users -----------------------------*/}
+      {/* Users */}
       {tab === "users" && (
         <div className="w-full">
           <DashUsers />
