@@ -1,5 +1,6 @@
 import DashPosts from "@/components/DashPosts";
 import DashProfile from "@/components/DashProfile";
+import DashUsers from "@/components/DashUsers";
 import Sidebar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -22,12 +23,18 @@ function Dashboard() {
         {/* Sidebar */}
         <Sidebar />
       </div>
-      {/* Profile */}
+      {/* Profile ---------------------------*/}
       {tab === "profile" && <DashProfile />}
-      {/* Posts */}
+      {/* Posts -----------------------------*/}
       {tab === "posts" && (
         <div className="w-full">
           <DashPosts />
+        </div>
+      )}
+      {/* Users -----------------------------*/}
+      {tab === "users" && (
+        <div className="w-full">
+          <DashUsers />
         </div>
       )}
     </div>
