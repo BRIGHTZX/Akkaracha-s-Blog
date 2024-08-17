@@ -89,6 +89,7 @@ export const deletepost = async (req, res, next) => {
     next(error);
   }
 };
+<<<<<<< HEAD
 
 export const updatepost = async (req, res, next) => {
   console.log(req.body);
@@ -116,3 +117,5 @@ export const updatepost = async (req, res, next) => {
     next(error);
   }
 };
+=======
+>>>>>>> cc6eccc2ca60d9fdc6579ac817875679815b56b7
