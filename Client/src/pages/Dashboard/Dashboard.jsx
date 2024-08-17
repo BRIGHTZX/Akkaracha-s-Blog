@@ -26,7 +26,7 @@ function Dashboard() {
       {tab === "profile" && <DashProfile />}
       {/* Posts */}
       {tab === "posts" && (
-        <div className="w-full  border-4 border-red-500">
+        <div className="w-full">
           <DashPosts />
         </div>
       )}
