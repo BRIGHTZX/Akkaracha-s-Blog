@@ -100,9 +100,9 @@ function DashPosts() {
   return (
     <div>
       {currentUser.isAdmin && userPosts.length > 0 ? (
-        <div className="lg:mx-12">
-          <ScrollArea className="max-w-full overflow-x-auto rounded-md border">
-            <Table className="min-w-[800px]">
+        <div className="sm:mx-8 md:mx-16">
+          <ScrollArea className="w-full overflow-x-auto rounded-md border">
+            <Table className="min-w-[700px]">
               <TableHeader className="bg-secondary">
                 <TableRow>
                   {/* Header */}

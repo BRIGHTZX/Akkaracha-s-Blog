@@ -27,13 +27,13 @@ function Dashboard() {
       {tab === "profile" && <DashProfile />}
       {/* Posts */}
       {tab === "posts" && (
-        <div className="w-full">
+        <div className="w-full overflow-hidden">
           <DashPosts />
         </div>
       )}
       {/* Users */}
       {tab === "users" && (
-        <div className="w-full">
+        <div className="w-full overflow-hidden">
           <DashUsers />
         </div>
       )}
