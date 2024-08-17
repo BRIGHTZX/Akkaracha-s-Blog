@@ -13,10 +13,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
 
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
   console.log(userPosts);
 
   useEffect(() => {
@@ -30,6 +32,9 @@ function DashPosts() {
 
         if (res.status >= 200 && res.status < 300) {
           setUserPosts(data.posts);
+          if (data.posts.length < 9) {
+            setShowMore(false);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -41,6 +46,24 @@ function DashPosts() {
     }
   }, [currentUser._id]);
 
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+
+    try {
+      const res = await axios(
+        `api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+
+      const data = res.data;
+      if (res.status >= 200 && res.status < 300) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length < 9) {
+          setShowMore(false);
+        }
+      }
+    } catch (error) {}
+  };
+
   return (
     <div>
       {currentUser.isAdmin && userPosts.length > 0 ? (
@@ -51,7 +74,7 @@ function DashPosts() {
                 <TableRow>
                   {/* Header */}
                   <TableHead className="w-[150px]">Date updated</TableHead>
-                  <TableHead className="w-[200px]">Post image</TableHead>
+                  <TableHead className="w-[150px]">Post image</TableHead>
                   <TableHead className="w-[150px]">Post title</TableHead>
                   <TableHead className="w-[150px]">Category</TableHead>
                   <TableHead className="w-[100px]">Delete</TableHead>
@@ -93,6 +116,17 @@ function DashPosts() {
             </Table>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
+          {showMore && (
+            <Button
+              onClick={handleShowMore}
+              variant="ghost"
+              className="w-full self-center py-7 text-sm"
+              w-full
+              text-primary
+            >
+              Show more
+            </Button>
+          )}
         </div>
       ) : null}
     </div>
