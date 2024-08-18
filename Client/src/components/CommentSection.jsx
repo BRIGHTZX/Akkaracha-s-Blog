@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import Comment from "./Comment";
 
 // eslint-disable-next-line no-unused-vars
 export default function CommentSection({ postId }) {
+  const navigate = useNavigate();
+
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
@@ -64,6 +66,34 @@ export default function CommentSection({ postId }) {
     };
     getComments();
   }, [postId]);
+
+  const handleLike = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/SignIn");
+        return;
+      }
+
+      const res = await axios.put(`/api/comment/likeComment/${commentId}`);
+
+      if (res.statusText === "OK") {
+        const data = res.data;
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
@@ -125,7 +155,7 @@ export default function CommentSection({ postId }) {
             </div>
           </div>
           {comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} />
+            <Comment key={comment._id} comment={comment} onLike={handleLike} />
           ))}
         </>
       )}
