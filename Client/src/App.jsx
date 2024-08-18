@@ -13,11 +13,13 @@ import OnlyPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost/CreatePost";
 import UpdatePost from "./pages/UpdatePost/UpdatePost";
 import PostPage from "./components/PostPage";
+import { ScrollToTop } from "./components/ScrollToTop";
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
         <div className="kanit">
+          <ScrollToTop />
           <Header />
           <Routes>
             <Route path="/SignIn" element={<SignIn />} />

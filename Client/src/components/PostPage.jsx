@@ -1,16 +1,17 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import FadeLoader from "react-spinners/ClipLoader";
 import { Button } from "./ui/button";
 import CallToAction from "./CallToAction";
+import CommentSection from "./CommentSection";
 
 function PostPage() {
   const { postSlug } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
-  console.log(post);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -78,6 +79,7 @@ function PostPage() {
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction />
       </div>
+      <CommentSection postId={post._id} />
     </main>
   );
 }
