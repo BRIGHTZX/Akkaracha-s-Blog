@@ -31,7 +31,6 @@ function DashPosts() {
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [postIdToDelete, setPostIdToDelete] = useState("");
-  console.log(userPosts);
 
   useEffect(() => {
     const fetchPosts = async () => {

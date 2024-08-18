@@ -46,7 +46,6 @@ function SignIn() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
-  console.log(formData);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
