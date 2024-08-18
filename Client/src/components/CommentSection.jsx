@@ -2,13 +2,13 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Comment from "./Comment";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Comment from "./Comment";
+import { Textarea } from "./ui/textarea";
 
 // eslint-disable-next-line no-unused-vars
 export default function CommentSection({ postId }) {
@@ -103,6 +103,23 @@ export default function CommentSection({ postId }) {
     );
   };
 
+  const handleDelete = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/SignIn");
+        return;
+      }
+
+      const res = await axios.delete(`/api/comment/deleteComment/${commentId}`);
+      if (res.statusText === "OK") {
+        const data = res.data;
+        setComments(comments.filter((comment) => comment._id !== commentId));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
@@ -168,6 +185,7 @@ export default function CommentSection({ postId }) {
               comment={comment}
               onLike={handleLike}
               onEdit={handleEdit}
+              onDelete={() => handleDelete(comment._id)}
             />
           ))}
         </>
