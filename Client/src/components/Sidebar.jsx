@@ -11,6 +11,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { BsFilePost } from "react-icons/bs";
 import { TbUsersGroup } from "react-icons/tb";
+import { LiaCommentSolid } from "react-icons/lia";
 
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
@@ -92,6 +93,13 @@ export default function Sidebar() {
                   <SidebarItem
                     icon={<TbUsersGroup />}
                     text="Users"
+                    active={tab == "users"}
+                  />
+                </Link>
+                <Link to="/Dashboard?tab=comments">
+                  <SidebarItem
+                    icon={<LiaCommentSolid />}
+                    text="Comments"
                     active={tab == "users"}
                   />
                 </Link>

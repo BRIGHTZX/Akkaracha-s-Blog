@@ -1,3 +1,4 @@
+import DashComments from "@/components/DashComments";
 import DashPosts from "@/components/DashPosts";
 import DashProfile from "@/components/DashProfile";
 import DashUsers from "@/components/DashUsers";
@@ -35,6 +36,12 @@ function Dashboard() {
       {tab === "users" && (
         <div className="w-full overflow-hidden">
           <DashUsers />
+        </div>
+      )}
+      {/* Comment */}
+      {tab === "comments" && (
+        <div className="w-full overflow-hidden">
+          <DashComments />
         </div>
       )}
     </div>
