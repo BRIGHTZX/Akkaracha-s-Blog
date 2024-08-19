@@ -34,7 +34,7 @@ export default function DashboardComponent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios("/api/user/getusers?limit=5");
+        const res = await axios("/api/user/getusers?limit=9");
         const data = res.data;
 
         if (res.status >= 200 && res.status < 300) {
@@ -48,7 +48,7 @@ export default function DashboardComponent() {
     };
     const fetchComments = async () => {
       try {
-        const res = await axios("/api/comment/getcomments?limit=5");
+        const res = await axios("/api/comment/getcomments?limit=9");
         const data = res.data;
 
         if (res.status >= 200 && res.status < 300) {
@@ -62,7 +62,7 @@ export default function DashboardComponent() {
     };
     const fetchPosts = async () => {
       try {
-        const res = await axios("/api/post/getposts?limit=5");
+        const res = await axios("/api/post/getposts?limit=9");
         const data = res.data;
 
         if (res.status >= 200 && res.status < 300) {
