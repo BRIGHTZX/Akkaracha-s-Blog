@@ -11,7 +11,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsFilePost } from "react-icons/bs";
-
+import { HiChartPie } from "react-icons/hi";
 import { LiaCommentSolid } from "react-icons/lia";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -106,7 +106,7 @@ export default function Sidebar() {
                 </Link>
                 <Link to="/Dashboard?tab=dash">
                   <SidebarItem
-                    icon={<LiaCommentSolid />}
+                    icon={<HiChartPie />}
                     text="Dashboard"
                     active={tab == "users"}
                   />
