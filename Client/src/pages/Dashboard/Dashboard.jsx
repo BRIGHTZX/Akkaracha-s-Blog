@@ -1,3 +1,4 @@
+import DashboardComponent from "@/components/DashboardComponent";
 import DashComments from "@/components/DashComments";
 import DashPosts from "@/components/DashPosts";
 import DashProfile from "@/components/DashProfile";
@@ -42,6 +43,12 @@ function Dashboard() {
       {tab === "comments" && (
         <div className="w-full overflow-hidden">
           <DashComments />
+        </div>
+      )}
+      {/* Dashboard Component */}
+      {tab === "dash" && (
+        <div className="w-full overflow-hidden">
+          <DashboardComponent />
         </div>
       )}
     </div>

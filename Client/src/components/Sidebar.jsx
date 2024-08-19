@@ -9,8 +9,9 @@ import { BiArrowFromRight, BiArrowFromLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RiLogoutBoxFill } from "react-icons/ri";
+import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsFilePost } from "react-icons/bs";
-import { TbUsersGroup } from "react-icons/tb";
+
 import { LiaCommentSolid } from "react-icons/lia";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -91,7 +92,7 @@ export default function Sidebar() {
                 </Link>
                 <Link to="/Dashboard?tab=users">
                   <SidebarItem
-                    icon={<TbUsersGroup />}
+                    icon={<HiOutlineUserGroup />}
                     text="Users"
                     active={tab == "users"}
                   />
@@ -100,6 +101,13 @@ export default function Sidebar() {
                   <SidebarItem
                     icon={<LiaCommentSolid />}
                     text="Comments"
+                    active={tab == "users"}
+                  />
+                </Link>
+                <Link to="/Dashboard?tab=dash">
+                  <SidebarItem
+                    icon={<LiaCommentSolid />}
+                    text="Dashboard"
                     active={tab == "users"}
                   />
                 </Link>
