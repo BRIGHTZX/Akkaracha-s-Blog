@@ -5,13 +5,14 @@ import react from "@vitejs/plugin-react";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// https://vitejs.dev/config/
+
 export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:4000",
-        secure: false,
+        target: "https://react-blog-5m0o.onrender.com",
+        changeOrigin: true,
+        secure: true,
       },
     },
   },
