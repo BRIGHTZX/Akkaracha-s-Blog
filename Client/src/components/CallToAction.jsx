@@ -8,15 +8,15 @@ export default function CallToAction() {
         <p className="text-gray-500 my-2">
           Checkout these resources with 100 JavaScript Projects
         </p>
-        <Button className="rounded-tl-xl rounded-bl-none">
-          <a
-            href="https://www.100jsprojects.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        <a
+          href="https://www.100jsprojects.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button className="w-full rounded-tl-xl rounded-bl-none">
             100 JavaScript Projects
-          </a>
-        </Button>
+          </Button>
+        </a>
       </div>
       <div className="flex-1 p-7">
         <img

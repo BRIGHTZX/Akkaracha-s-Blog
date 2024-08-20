@@ -15,6 +15,7 @@ import UpdatePost from "./pages/UpdatePost/UpdatePost";
 import PostPage from "./components/PostPage";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Search from "./components/Search";
+import Project from "./pages/Project/Project";
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -25,9 +26,10 @@ function App() {
           <Routes>
             <Route path="/SignIn" element={<SignIn />} />
             <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/Search" element={<Search />} />
             <Route path="/" element={<Home />} />
+            <Route path="/Search" element={<Search />} />
             <Route path="/About" element={<About />} />
+            <Route path="/Project" element={<Project />} />
             <Route element={<PrivateRoute />}>
               <Route path="/Dashboard" element={<Dashboard />} />
             </Route>
