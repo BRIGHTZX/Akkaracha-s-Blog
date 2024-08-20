@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios("/api/post/getPosts");
+        const res = await axios("/api/post/getposts");
         const data = res.data;
         setPosts(data.posts);
       } catch (error) {
