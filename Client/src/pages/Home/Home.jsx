@@ -23,17 +23,15 @@ function Home() {
   return (
     <div>
       <div className="flex flex-col gap-6 lg:p-28 px-3 pb-3 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold lg:text-6xl text-center mt-6 lg:mt-0">
-          Welcome to my Blog
-        </h1>
-        <p className="text-gray-500 text-sm sm:text-lg">
+        <h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
+        <p className="text-gray-500 text-xs sm:text-sm">
           Here you&apos;ll find a varity of articles and tutorials on topics
           such as web development, software engineering, and programming
           languages.
         </p>
         <Link
           to="/Search"
-          className="text-xs sm:text-lg text-blue-500 font-bold hover:underline"
+          className="text-xs sm:text-sm text-blue-500 font-bold hover:underline"
         >
           View all posts
         </Link>
@@ -55,7 +53,7 @@ function Home() {
               </div>
               <Link
                 to={`/Search`}
-                className="text-lg text-blue-500 hover:underline text-center"
+                className="text-lg text-blue hover:underline text-center"
               >
                 View All Posts
               </Link>
