@@ -58,7 +58,7 @@ function Header() {
             </form>
           </div>
 
-          <div className="flex">
+          <div className="flex gap-2">
             <Toggle
               className="text-xl"
               onClick={() => setTheme(theme === "light" ? "dark" : "light")} // สลับธีมระหว่าง 'light' และ 'dark'
