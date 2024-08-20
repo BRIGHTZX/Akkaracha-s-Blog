@@ -34,7 +34,7 @@ export const getposts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.order === "asc" ? 1 : -1;
+    const sortDirection = req.query.sort === "asc" ? 1 : -1; // Changed to match frontend
 
     const filter = {
       ...(req.query.userId && { userId: req.query.userId }),
@@ -48,15 +48,14 @@ export const getposts = async (req, res, next) => {
         ],
       }),
     };
-    // เรียกใช้ filter กับ Post.find()
+
     const posts = await Post.find(filter)
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
-    const totalPosts = await Post.countDocuments();
+    const totalPosts = await Post.countDocuments(filter);
     const now = new Date();
-
     const oneMonthAgo = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
