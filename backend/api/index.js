@@ -23,7 +23,6 @@ mongoose
 const __dirname = path.resolve();
 const app = express();
 
-const cors = require("cors");
 app.use(
   cors({
     origin: "https://your-client-url.vercel.app",
@@ -31,7 +30,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 app.use(express.json());
 app.use(cookieParser());
 
