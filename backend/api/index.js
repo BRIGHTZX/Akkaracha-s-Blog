@@ -23,9 +23,10 @@ mongoose
 const __dirname = path.resolve();
 const app = express();
 
+const devOrigins = ["http://localhost:5173"];
 app.use(
   cors({
-    origin: "https://react-blog-iota-two.vercel.app/",
+    origin: "https://react-blog-f12airkp6-akkarachas-projects.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
