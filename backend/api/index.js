@@ -25,7 +25,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://your-client-url.vercel.app",
+    origin: "https://react-blog-iota-two.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
