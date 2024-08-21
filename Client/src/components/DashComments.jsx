@@ -111,7 +111,7 @@ function DashComments() {
               {comments.map((comment) => (
                 <TableBody
                   key={comment._id}
-                  className="border border-secondary"
+                  className="border border-secondary h-[100px]"
                 >
                   <TableRow>
                     <TableCell className="font-medium">

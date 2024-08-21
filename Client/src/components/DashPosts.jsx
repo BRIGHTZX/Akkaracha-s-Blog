@@ -116,7 +116,10 @@ function DashPosts() {
                 </TableRow>
               </TableHeader>
               {userPosts.map((post) => (
-                <TableBody key={post._id} className="border border-secondary">
+                <TableBody
+                  key={post._id}
+                  className="border border-secondary h-[100px]"
+                >
                   <TableRow>
                     <TableCell className="font-medium">
                       {new Date(post.updatedAt).toLocaleDateString()}

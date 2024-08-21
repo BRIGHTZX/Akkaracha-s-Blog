@@ -105,7 +105,10 @@ function DashUsers() {
                 </TableRow>
               </TableHeader>
               {users.map((user) => (
-                <TableBody key={user._id} className="border border-secondary">
+                <TableBody
+                  key={user._id}
+                  className="border border-secondary h-[100px]"
+                >
                   <TableRow>
                     <TableCell className="font-medium">
                       {new Date(user.createdAt).toLocaleDateString()}

@@ -101,14 +101,14 @@ export default function Sidebar() {
                   <SidebarItem
                     icon={<LiaCommentSolid />}
                     text="Comments"
-                    active={tab == "users"}
+                    active={tab == "comments"}
                   />
                 </Link>
                 <Link to="/Dashboard?tab=dash">
                   <SidebarItem
                     icon={<HiChartPie />}
                     text="Dashboard"
-                    active={tab == "users"}
+                    active={tab == "dash"}
                   />
                 </Link>
               </>
