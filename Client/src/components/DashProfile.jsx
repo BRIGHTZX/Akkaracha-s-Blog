@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -125,7 +126,6 @@ function DashProfile() {
 
         setImageFileUploadProgress(progress.toFixed(0));
       },
-      // eslint-disable-next-line no-unused-vars
       (error) => {
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
@@ -170,7 +170,10 @@ function DashProfile() {
           headers: { "Content-Type": "application/json" },
         }
       );
-      const data = await res.data;
+      const data = res.data;
+      console.log(formData);
+      console.log(res);
+      console.log(data);
       if (!(res.status >= 200 && res.status < 300)) {
         dispatch(updateFailure(data.message));
         setUpdateUserError(data.message);
