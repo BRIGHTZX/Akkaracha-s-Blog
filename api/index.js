@@ -23,6 +23,7 @@ mongoose
 const __dirname = path.resolve();
 const app = express();
 
+// CORS middleware
 app.use(
   cors({
     origin: ["https://akkarachas-blog.onrender.com", "http://localhost:5173"], // กำหนดโดเมนที่อนุญาต
@@ -31,15 +32,15 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(cookieParser());
-
-// Middleware for setting headers
+// Middleware for setting COEP and CORS headers
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
+
+app.use(express.json());
+app.use(cookieParser());
 
 // API Routes
 app.use("/api/user", userRoutes);
@@ -48,7 +49,7 @@ app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, "/Client/dist")));
+app.use(express.static(path.join(__dirname, "Client", "dist")));
 
 // Handle all other routes with the React app
 app.get("*", (req, res) => {
@@ -67,5 +68,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(4000, () => {
-  console.log("Server run 4000");
+  console.log("Server running on port 4000");
 });
