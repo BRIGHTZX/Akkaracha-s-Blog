@@ -80,25 +80,28 @@ function CreatePost() {
     e.preventDefault();
     setPublishSuccess(null);
     setPublishError(null);
+
+    if (!formData.title || !formData.category || !formData.content) {
+      setPublishError("Please fill all fields");
+      return;
+    }
+
     try {
       const res = await axios.post("/api/post/create", formData);
-      const data = await res.data;
-
-      if (!(res.status >= 200 && res.status < 300)) {
-        setPublishError(data.message || "Failed to publish");
-      } else {
+      if (res.status >= 200 && res.status < 300) {
         setPublishError(null);
-        setPublishSuccess("Success Publish");
-        setFormData({});
+        setPublishSuccess("Successfully Published");
+        setFormData({}); // Clear form data on success
         setTimeout(() => {
           navigate(`/Post/${res.data.slug}`);
-        }, 1500); // 2 seconds delay
+        }, 1500); // 1.5 seconds delay
+      } else {
+        setPublishError(res.data.message || "Failed to publish");
       }
     } catch (error) {
-      setPublishError("Publish Falied");
+      setPublishError("Publish Failed");
     }
   };
-
   return (
     <div className="h-auto md:container">
       <div className="text-center h-auto p-4 sm:my-4">
@@ -119,7 +122,12 @@ function CreatePost() {
               />
               <Select
                 onValueChange={(value) => {
-                  setFormData({ ...formData, category: value });
+                  if (value) {
+                    setFormData({ ...formData, category: value });
+                    setPublishError(null); // Clear error when a valid category is selected
+                  } else {
+                    setPublishError("Please select a category");
+                  }
                 }}
               >
                 <SelectTrigger className="w-full sm:w-[250px] md:w-[350px] font-bold">
@@ -128,7 +136,7 @@ function CreatePost() {
                 <SelectContent>
                   <SelectGroup className="font-bold">
                     <SelectLabel>Select a category</SelectLabel>
-                    <SelectItem value="javascript">Javascript</SelectItem>
+                    <SelectItem value="javascript">JavaScript</SelectItem>
                     <SelectItem value="reactjs">React.js</SelectItem>
                     <SelectItem value="nextjs">Next.js</SelectItem>
                   </SelectGroup>
